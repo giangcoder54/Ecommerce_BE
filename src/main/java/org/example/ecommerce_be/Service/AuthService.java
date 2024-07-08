@@ -124,5 +124,44 @@ public class AuthService {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @Transactional
+    //thực thi thành công hết hoặc là không có bất cứ hành động nào được thực khi có bất kỳ một hoạt động thực thi không thành công.
+    public ResponseEntity<?> registerAdmin(SignupRequest signUpRequest) {
+        if (userRepository.existsByUserName(signUpRequest.getUserName())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
+
+
+        User user =  new User(signUpRequest.getUserName(),signUpRequest.getFullName(), signUpRequest.getFirstName(),
+                encoder.encode( signUpRequest.getPassword()), signUpRequest.getMobile(),signUpRequest.getEmail()
+                , signUpRequest.getAddress(), signUpRequest.getBirthDate(), signUpRequest.getGender());
+
+
+        Role role = roleRepository.findByName(ERole.ADMIN);
+        UserRole userRole = new UserRole(role.getId(),user.getId());
+
+
+
+        try {
+            userRepository.save(user);
+            userRoleRepository.save(userRole);
+
+        } catch (Exception e) {
+            // Rollback transaction if any exception occurs
+            throw new RuntimeException("Error: Unable to register user", e);
+        }
+
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
     }
 

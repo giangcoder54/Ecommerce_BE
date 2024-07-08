@@ -118,8 +118,18 @@ public class JwtUtils {
     }
 
     public Claims getClaimsFromJwtToken(String token) {
+        RSAPrivateKey privateKey = null;
+        try {
+            privateKey =  getPrivateKey("private.pem");
+            return Jwts.parser().setSigningKey(privateKey).parseClaimsJws(token).getBody();
 
-        return Jwts.parser().setSigningKey(jwtRefreshSecret).parseClaimsJws(token).getBody();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
     private boolean isTokenExpired(Claims claims) {
@@ -135,10 +145,14 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String authToken) {
+        RSAPrivateKey privateKey = null;
         try {
-            Jwts.parser().setSigningKey(jwtRefreshSecret).parseClaimsJws(authToken);
+          privateKey =  getPrivateKey("private.pem");
+            Jwts.parser().setSigningKey(privateKey).parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException e) {
+
+        }
+        catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
@@ -148,6 +162,12 @@ public class JwtUtils {
             logger.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
         }
 
         return false;
