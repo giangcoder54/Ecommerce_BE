@@ -3,6 +3,7 @@ package org.example.ecommerce_be.Config;
 
 // imports
 
+import org.example.ecommerce_be.Enum.ERole;
 import org.example.ecommerce_be.Security.UserDetailsImplService;
 import org.example.ecommerce_be.Service.JWT.AuthenticationEntryPointHandler;
 import org.example.ecommerce_be.Service.JWT.AuthenticationFilter1;
@@ -15,8 +16,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 //import org.springframework.security.web.authentication.AuthenticationFilter;
 
@@ -54,7 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         @Bean
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
+
         }
+
+
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -64,11 +71,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authorizeRequests().antMatchers("/", "/home", "/search", "/api/auth/**", "/verify",
                                 "/product/**", "/product-detail/**", "/blog/**", "/blog-detail/**", "/about", "/contact",
                                 "/review-ws/**", "/auto-chat").permitAll()
+                        .antMatchers("/admin/**").hasRole(ERole.ADMIN.name())
                         .antMatchers("/api/test/**").permitAll()
                         .anyRequest().authenticated();
 
                 http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         }
+
 }
 
 

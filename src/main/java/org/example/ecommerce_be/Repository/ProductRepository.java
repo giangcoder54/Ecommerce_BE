@@ -14,7 +14,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select * from product where name like %:keyword% or description like %:keyword%", nativeQuery = true)
-    public Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+     Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    List<Product> findByCategoryId(Long categoryId);
+    @Query(value = "select * from product where category_id = :categoryId", nativeQuery = true)
+
+    List<Product> findByCategory_id(@Param("categoryId") Long categoryId);
 }

@@ -1,0 +1,11 @@
+use ecommerce;
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Electronics', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Books', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Clothing', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Home & Kitchen', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Sports & Outdoors', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Health & Personal Care', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Toys & Games', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Automotive', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Beauty & Grooming', false, true);
+INSERT INTO category (name, is_deleted, is_activated) VALUES ('Jewelry', false, true);

@@ -62,7 +62,7 @@ public class ProductService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     public List<Product> getRelatedProducts(Long categoryId, Long excludeProductId, int limit) {
-        List<Product> relatedProducts = productRepository.findByCategoryId(categoryId);
+        List<Product> relatedProducts = productRepository.findByCategory_id(categoryId);
         return relatedProducts.stream()
                 .filter(product -> !product.getProduct_id().equals(excludeProductId)) //product itself is not included in the list of related products.
                 .limit(limit)
